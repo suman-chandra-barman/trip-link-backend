@@ -1,1 +1,1 @@
-export type TLoginData = { email: string; password: string };
+export type TLoginData = { usernameOrEmail: string; password: string };

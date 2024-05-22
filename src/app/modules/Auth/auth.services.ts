@@ -6,13 +6,16 @@ import prisma from "../../../shared/prisma";
 
 const login = async (payload: TLoginData) => {
   // check is user exists
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: {
-      email: payload.email,
+      OR: [
+        { username: payload.usernameOrEmail },
+        { email: payload.usernameOrEmail },
+      ],
     },
   });
   if (!user) {
-    throw new Error("Invalid Email or Password!");
+    throw new Error("Invalid Email or UserName!");
   }
 
   // check password is match
@@ -21,13 +24,14 @@ const login = async (payload: TLoginData) => {
     user.password
   );
   if (!isCorrectPassword) {
-    throw new Error("Invalid Email or Password!");
+    throw new Error("Invalid Password!");
   }
 
   // generate jwt token
   const jwtPayload = {
-    name: user.name,
+    username: user.username,
     email: user.email,
+    role: user.role,
   };
   const token = jwt.sign(jwtPayload, config.jwt.secret as string, {
     expiresIn: config.jwt.expires_in,
@@ -35,7 +39,7 @@ const login = async (payload: TLoginData) => {
 
   return {
     id: user.id,
-    name: user.name,
+    username: user.username,
     email: user.email,
     token,
   };

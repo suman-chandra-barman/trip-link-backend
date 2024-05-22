@@ -53,7 +53,7 @@ const getUserProfileFromDB = async (id: string) => {
     },
     select: {
       id: true,
-      name: true,
+      username: true,
       email: true,
       createdAt: true,
       updatedAt: true,
@@ -72,7 +72,7 @@ const updateUserProfileIntoDB = async (
     data: payload,
     select: {
       id: true,
-      name: true,
+      username: true,
       email: true,
       createdAt: true,
       updatedAt: true,
