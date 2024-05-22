@@ -11,9 +11,10 @@ const createUserIntoDB = async (payload: TUserCreateData) => {
   );
 
   const userData = {
-    name: payload.name,
+    username: payload.username,
     email: payload.email,
     password: hashedPassword,
+    role: payload.role,
   };
 
   // create user and user profile
@@ -24,7 +25,7 @@ const createUserIntoDB = async (payload: TUserCreateData) => {
 
       select: {
         id: true,
-        name: true,
+        username: true,
         email: true,
         createdAt: true,
         updatedAt: true,
@@ -36,7 +37,7 @@ const createUserIntoDB = async (payload: TUserCreateData) => {
       data: {
         userId: createdUser.id,
         age: payload.profile.age,
-        bio: payload.profile.bio,
+        contactNumber: payload.profile.contactNumber,
       },
     });
 

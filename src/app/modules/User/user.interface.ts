@@ -1,9 +1,12 @@
+import { UserRole } from "@prisma/client";
+
 export type TUserCreateData = {
-  name: string;
+  username: string;
   email: string;
   password: string;
+  role: UserRole;
   profile: {
-    bio: string;
+    contactNumber: string;
     age: number;
   };
 };
