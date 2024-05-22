@@ -4,15 +4,16 @@ import config from "../../config";
 import prisma from "../../shared/prisma";
 import AppError from "../errors/AppError";
 import httpStatus from "http-status";
+import { UserRole } from "@prisma/client";
 
-const auth = () => {
+const auth = (...requiredRoles: UserRole[]) => {
   return async (
     req: Request & { user?: any },
     res: Response,
     next: NextFunction
   ) => {
     try {
-      //check is token exists
+      //check token is exists
       const token = req.headers.authorization;
       if (!token) {
         throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized Access");
@@ -36,14 +37,20 @@ const auth = () => {
         },
         select: {
           id: true,
-          name: true,
+          username: true,
           email: true,
+          role: true,
           createdAt: true,
           updatedAt: true,
         },
       });
       if (!user) {
         throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized Access");
+      }
+
+      //check if the user applies to this route
+      if (requiredRoles && !requiredRoles.includes(validTokenUser.role)) {
+        throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized!");
       }
 
       //set token user in express request

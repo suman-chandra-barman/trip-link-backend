@@ -3,12 +3,20 @@ import { TrapServices } from "./trip.service";
 import sendResponse from "../../../shared/sendResponse";
 import catchAsync from "../../../shared/catchAsync";
 import pick from "../../../shared/pick";
+import { TAuthUser } from "../../interface/common";
 
 const createTrip = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization || "";
+  async (
+    req: Request & { user?: TAuthUser },
+    res: Response,
+    next: NextFunction
+  ) => {
+    const user = req.user;
 
-    const result = await TrapServices.createTripIntoDB(token, req.body);
+    const result = await TrapServices.createTripIntoDB(
+      user as TAuthUser,
+      req.body
+    );
 
     sendResponse(res, {
       success: true,

@@ -26,11 +26,11 @@ model User {
 model UserProfile {
   id            String   @id @default(uuid())
   userId        String   @unique
-  image         String?
   contactNumber String
-  address       String?
   age           Int
+  image         String?
   bio           String?
+  address       String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -40,17 +40,18 @@ model UserProfile {
 }
 
 model Trip {
-  id          String     @id @default(uuid())
+  id          String   @id @default(uuid())
   userId      String
   destination String
   description String
-  travelDates DateTime[]
+  startDate   String
+  endDate     String
   travelType  String
   photos      String[]
   budget      Int
   activities  String[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   travelBuddyRequests TravelBuddyRequest[]
 

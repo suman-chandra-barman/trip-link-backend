@@ -3,36 +3,19 @@ import config from "../../../config";
 import prisma from "../../../shared/prisma";
 import { Prisma } from "@prisma/client";
 import calculatePagination from "../../../helpers/paginationHelpers";
+import { TTrip } from "./trip.interface";
+import { TAuthUser } from "../../interface/common";
 
-const createTripIntoDB = async (token: string, payload: any) => {
-  if (!token) {
-    throw new Error("Unauthorized Access");
-  }
-
-  //check token is valid
-  const isValidToken = jwt.verify(
-    token,
-    config.jwt.secret as string
-  ) as JwtPayload;
-
-  //check user is exists
-  const user = await prisma.user.findUnique({
-    where: {
-      email: isValidToken.email,
-    },
-  });
+const createTripIntoDB = async (user: TAuthUser, payload: TTrip) => {
   if (!user) {
-    throw new Error("Unauthorized Access");
+    throw new Error("User not found!");
   }
-
-  const tripData = {
-    userId: user.id,
-    ...payload,
-  };
-
   //create trip into db
   const result = await prisma.trip.create({
-    data: tripData,
+    data: {
+      userId: user?.id,
+      ...payload,
+    },
   });
   return result;
 };
