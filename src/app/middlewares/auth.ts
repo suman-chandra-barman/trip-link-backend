@@ -5,21 +5,22 @@ import prisma from "../../shared/prisma";
 import AppError from "../errors/AppError";
 import httpStatus from "http-status";
 import { UserRole } from "@prisma/client";
+import { TAuthUser } from "../interface/common";
 
 const auth = (...requiredRoles: UserRole[]) => {
   return async (
-    req: Request & { user?: any },
+    req: Request & { user?: TAuthUser },
     res: Response,
     next: NextFunction
   ) => {
     try {
-      //check token is exists
+      //check token
       const token = req.headers.authorization;
       if (!token) {
         throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized Access");
       }
 
-      //token user
+      // user
       let validTokenUser: JwtPayload = {};
 
       //check token is valid
@@ -34,6 +35,8 @@ const auth = (...requiredRoles: UserRole[]) => {
       const user = await prisma.user.findUnique({
         where: {
           email: validTokenUser.email,
+          isDeleted: false,
+          status: "ACTIVE",
         },
         select: {
           id: true,

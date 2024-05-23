@@ -1,3 +1,8 @@
+type TItinerary = {
+  day: number;
+  description: string;
+};
+
 export type TTrip = {
   destination: string;
   description: string;
@@ -6,5 +11,6 @@ export type TTrip = {
   travelType: string;
   photos: string[];
   budget: number;
-  activities: string[];
+  isDeleted: false;
+  itinerary: TItinerary[];
 };

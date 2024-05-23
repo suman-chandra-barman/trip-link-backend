@@ -1,4 +1,9 @@
-import { z } from "zod";
+import { number, z } from "zod";
+
+const itinerarySchema = z.object({
+  day: z.number({ required_error: "Day  is required" }),
+  description: z.string({ required_error: "Description  is required" }),
+});
 
 const createTripValidationSchema = z.object({
   body: z.object({
@@ -9,7 +14,7 @@ const createTripValidationSchema = z.object({
     travelType: z.string({ required_error: "Travel Type  is required" }),
     photos: z.array(z.string()),
     budget: z.number({ required_error: "Budget  is required" }),
-    activities: z.array(z.string()),
+    itinerary: z.array(itinerarySchema),
   }),
 });
 

@@ -1,14 +1,14 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
-import config from "../../../config";
 import prisma from "../../../shared/prisma";
 import { Prisma } from "@prisma/client";
 import calculatePagination from "../../../helpers/paginationHelpers";
 import { TTrip } from "./trip.interface";
 import { TAuthUser } from "../../interface/common";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 const createTripIntoDB = async (user: TAuthUser, payload: TTrip) => {
   if (!user) {
-    throw new Error("User not found!");
+    throw new AppError(httpStatus.NOT_FOUND, "User not found!");
   }
   //create trip into db
   const result = await prisma.trip.create({
@@ -21,15 +21,17 @@ const createTripIntoDB = async (user: TAuthUser, payload: TTrip) => {
 };
 
 const getAllTripsFromDB = async (query: any, paginationOptions: any) => {
-  const { searchTerm, minBudget, maxBudget, ...filterData } = query;
+  const { searchTerm, travelDate, minBudget, maxBudget, ...filterData } = query;
+
+  const d = new Date(searchTerm);
 
   const { page, limit, skip, sortBy, sortOrder } =
     calculatePagination(paginationOptions);
 
   const andConditions: Prisma.TripWhereInput[] = [];
 
-  //search trip by searchTerm
-  if (searchTerm) {
+  //if search trip by string  value
+  if (searchTerm && isNaN(d.getTime())) {
     andConditions.push({
       OR: [
         {
@@ -39,8 +41,27 @@ const getAllTripsFromDB = async (query: any, paginationOptions: any) => {
           },
         },
         {
-          budget: Number(query.searchTerm) || Number(),
+          travelType: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
         },
+        {
+          description: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+      ],
+    });
+  }
+
+  //if search by date
+  if (searchTerm && !isNaN(d.getTime())) {
+    andConditions.push({
+      AND: [
+        { startDate: { lte: searchTerm } },
+        { endDate: { gte: searchTerm } },
       ],
     });
   }

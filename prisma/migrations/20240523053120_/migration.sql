@@ -4,6 +4,9 @@ CREATE TYPE "BuddyRequestStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER');
 
+-- CreateEnum
+CREATE TYPE "ActiveStatus" AS ENUM ('ACTIVE', 'DEACTIVE');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
@@ -11,6 +14,8 @@ CREATE TABLE "users" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" "UserRole" NOT NULL DEFAULT 'USER',
+    "status" "ActiveStatus" NOT NULL DEFAULT 'ACTIVE',
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -21,10 +26,10 @@ CREATE TABLE "users" (
 CREATE TABLE "userProfiles" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "image" TEXT,
     "contactNumber" TEXT NOT NULL,
-    "address" TEXT,
     "age" INTEGER NOT NULL,
+    "image" TEXT,
+    "address" TEXT,
     "bio" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -38,11 +43,13 @@ CREATE TABLE "trips" (
     "userId" TEXT NOT NULL,
     "destination" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "travelDates" TIMESTAMP(3)[],
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3) NOT NULL,
     "travelType" TEXT NOT NULL,
     "photos" TEXT[],
+    "itinerary" JSONB NOT NULL,
     "budget" INTEGER NOT NULL,
-    "activities" TEXT[],
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

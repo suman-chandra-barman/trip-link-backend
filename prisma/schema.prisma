@@ -8,13 +8,15 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  email     String   @unique
+  id        String       @id @default(uuid())
+  username  String       @unique
+  email     String       @unique
   password  String
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role      UserRole     @default(USER)
+  status    ActiveStatus @default(ACTIVE)
+  isDeleted Boolean      @default(false)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 
   trips               Trip[]
   travelBuddyRequests TravelBuddyRequest[]
@@ -29,8 +31,8 @@ model UserProfile {
   contactNumber String
   age           Int
   image         String?
-  bio           String?
   address       String?
+  bio           String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -44,12 +46,13 @@ model Trip {
   userId      String
   destination String
   description String
-  startDate   String
-  endDate     String
+  startDate   DateTime
+  endDate     DateTime
   travelType  String
   photos      String[]
+  itinerary   Json
   budget      Int
-  activities  String[]
+  isDeleted   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -74,6 +77,7 @@ model TravelBuddyRequest {
   @@map("travelBuddyRequests")
 }
 
+// ----------- ENUMS ---------------
 enum BuddyRequestStatus {
   PENDING
   APPROVED
@@ -83,4 +87,9 @@ enum BuddyRequestStatus {
 enum UserRole {
   ADMIN
   USER
+}
+
+enum ActiveStatus {
+  ACTIVE
+  DEACTIVE
 }

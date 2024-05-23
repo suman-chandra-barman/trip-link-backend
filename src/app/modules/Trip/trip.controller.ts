@@ -32,10 +32,9 @@ const getAllTrips = catchAsync(
     const filteredQuery = pick(req.query, [
       "searchTerm",
       "destination",
-      "startDate",
-      "endDate",
-      "minBudget",
-      "maxBudget",
+      "travelDate",
+      "travelType",
+      "description",
     ]);
 
     const paginationOptions = pick(req.query, [
