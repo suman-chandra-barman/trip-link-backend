@@ -8,7 +8,18 @@ const loginValidationSchema = z.object({
     password: z.string({ required_error: "Password  is required" }),
   }),
 });
+const changePasswordValidationSchema = z.object({
+  body: z.object({
+    currentPassword: z.string({
+      required_error: "Current password  is required",
+    }),
+    newPassword: z
+      .string()
+      .min(5, { message: "Password must be at least 5 characters long" }),
+  }),
+});
 
 export const AuthValidationSchema = {
   loginValidationSchema,
+  changePasswordValidationSchema,
 };

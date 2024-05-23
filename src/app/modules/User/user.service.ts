@@ -14,7 +14,6 @@ const createUserIntoDB = async (payload: TUserCreateData) => {
     username: payload.username,
     email: payload.email,
     password: hashedPassword,
-    role: payload.role,
   };
 
   // create user and user profile

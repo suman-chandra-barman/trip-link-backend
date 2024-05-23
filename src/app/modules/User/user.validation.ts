@@ -9,8 +9,9 @@ const createUserValidationSchema = z.object({
         message: "Username must be less than or equal to 30 characters long",
       }),
     email: z.string().email({ message: "Please enter a valid email address" }),
-    password: z.string({ required_error: "Password  is required" }),
-    role: z.enum(["ADMIN", "USER"]).default("USER"),
+    password: z
+      .string()
+      .min(5, { message: "Password must be at least 5 characters long" }),
     profile: z.object({
       contactNumber: z.string({
         required_error: "Contact Number is required",

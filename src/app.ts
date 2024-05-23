@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 //app routers
-app.use("/api", Routes);
+app.use("/api/v1", Routes);
 
 //root route
 app.get("/", (req: Request, res: Response) => {

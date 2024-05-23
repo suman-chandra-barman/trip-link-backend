@@ -6,11 +6,26 @@ import { TravelBuddyRequestRouters } from "../modules/TravelBuddyRequest/travelB
 
 const router = Router();
 
-router.use("/register", UserRouters);
-router.use("/profile", UserRouters);
-router.use("/login", AuthRouters);
-router.use("/trips", TripRouters);
-router.use("/trip", TravelBuddyRequestRouters);
-router.use("/travel-buddies", TravelBuddyRequestRouters);
+const moduleRoutes = [
+  {
+    path: "/user",
+    route: UserRouters,
+  },
+
+  {
+    path: "/auth",
+    route: AuthRouters,
+  },
+  {
+    path: "/trips",
+    route: TripRouters,
+  },
+  {
+    path: "/travel-buddies",
+    route: TravelBuddyRequestRouters,
+  },
+];
+
+moduleRoutes.forEach((route) => router.use(route.path, route.route));
 
 export const Routes = router;

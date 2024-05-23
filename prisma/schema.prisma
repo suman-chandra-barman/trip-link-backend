@@ -8,15 +8,15 @@ datasource db {
 }
 
 model User {
-  id        String       @id @default(uuid())
-  username  String       @unique
-  email     String       @unique
+  id        String     @id @default(uuid())
+  username  String     @unique
+  email     String     @unique
   password  String
-  role      UserRole     @default(USER)
-  status    ActiveStatus @default(ACTIVE)
-  isDeleted Boolean      @default(false)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  role      UserRole   @default(USER)
+  status    UserStatus @default(ACTIVE)
+  isDeleted Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   trips               Trip[]
   travelBuddyRequests TravelBuddyRequest[]
@@ -28,11 +28,14 @@ model User {
 model UserProfile {
   id            String   @id @default(uuid())
   userId        String   @unique
+  name          String?
   contactNumber String
+  occupation    String?
   age           Int
   image         String?
   address       String?
   bio           String?
+  isDeleted     Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -67,7 +70,7 @@ model TravelBuddyRequest {
   id        String             @id @default(uuid())
   tripId    String
   userId    String
-  status    BuddyRequestStatus
+  status    BuddyRequestStatus @default(PENDING)
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
 
@@ -89,7 +92,7 @@ enum UserRole {
   USER
 }
 
-enum ActiveStatus {
+enum UserStatus {
   ACTIVE
   DEACTIVE
 }
