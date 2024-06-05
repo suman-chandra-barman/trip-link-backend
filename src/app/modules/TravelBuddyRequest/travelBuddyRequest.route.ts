@@ -3,12 +3,13 @@ import validateRequest from "../../middlewares/validateRequest";
 import { TravelDuddyRequestValidationSchema } from "./travelBuddyRequest.validation";
 import { TravelBuddyRequestControllers } from "./travelBuddyRequest.controller";
 import auth from "../../middlewares/auth";
+import { UserRole } from "@prisma/client";
 
 const router = Router();
 
 router.post(
-  "/:tripId/request",
-  auth(),
+  "/request",
+  auth(UserRole.ADMIN, UserRole.USER),
   validateRequest(
     TravelDuddyRequestValidationSchema.createTravelDuddyRequestValidationSchema
   ),
@@ -17,13 +18,13 @@ router.post(
 
 router.get(
   "/:tripId",
-  auth(),
+  auth(UserRole.ADMIN, UserRole.USER),
   TravelBuddyRequestControllers.getPotentialTravelBuddies
 );
 
 router.put(
   "/:buddyId/respond",
-  auth(),
+  auth(UserRole.ADMIN, UserRole.USER),
   validateRequest(
     TravelDuddyRequestValidationSchema.responseTravelDuddyRequestValidationSchema
   ),

@@ -3,11 +3,14 @@ import prisma from "../../../shared/prisma";
 import AppError from "../../errors/AppError";
 import { BuddyRequestStatus } from "@prisma/client";
 
-const sendTravelBuddyRequest = async (tripId: string, userId: string) => {
+const sendTravelBuddyRequest = async (payload: {
+  userId: string;
+  tripId: string;
+}) => {
   //check trip is exists
   const isTripExists = await prisma.trip.findUnique({
     where: {
-      id: tripId,
+      id: payload.tripId,
     },
   });
   if (!isTripExists) {
@@ -17,18 +20,29 @@ const sendTravelBuddyRequest = async (tripId: string, userId: string) => {
   //check trip is exists
   const isUserExists = await prisma.user.findUnique({
     where: {
-      id: userId,
+      id: payload.userId,
     },
   });
   if (!isUserExists) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
 
+  //check is user already send request
+  const isAlreadySend = await prisma.travelBuddyRequest.findFirst({
+    where: {
+      tripId: payload.tripId,
+      userId: payload.userId,
+    },
+  });
+  if (isAlreadySend) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Request Already Send");
+  }
+
   //create travel buddy request into db
   const result = await prisma.travelBuddyRequest.create({
     data: {
-      tripId,
-      userId,
+      tripId: payload.tripId,
+      userId: payload.userId,
       status: "PENDING",
     },
   });
@@ -44,7 +58,6 @@ const getPotentialTravelBuddies = async (tripId: string) => {
       user: {
         select: {
           id: true,
-          name: true,
           email: true,
           createdAt: true,
           updatedAt: true,

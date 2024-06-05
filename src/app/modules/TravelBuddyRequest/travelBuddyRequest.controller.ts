@@ -5,12 +5,8 @@ import sendResponse from "../../../shared/sendResponse";
 
 const sendTravelBuddyRequest = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const tripId = req.params.tripId;
-    const userId = req.body.userId;
-
     const result = await TravelBuddyRequestServices.sendTravelBuddyRequest(
-      tripId,
-      userId
+      req.body
     );
     sendResponse(res, {
       success: true,

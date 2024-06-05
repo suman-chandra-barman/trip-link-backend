@@ -4,6 +4,7 @@ import { z } from "zod";
 const createTravelDuddyRequestValidationSchema = z.object({
   body: z.object({
     userId: z.string({ required_error: "User ID  is required" }),
+    tripId: z.string({ required_error: "Trip ID  is required" }),
   }),
 });
 const responseTravelDuddyRequestValidationSchema = z.object({
