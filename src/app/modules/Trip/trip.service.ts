@@ -139,8 +139,20 @@ const getAllTripsFromDB = async (query: any, paginationOptions: any) => {
     data: result,
   };
 };
+const getSingleTripFromBD = async (id: string) => {
+  const result = await prisma.trip.findUnique({
+    where: {
+      id,
+    },
+  });
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, "Trip not found");
+  }
+  return result;
+};
 
 export const TrapServices = {
   createTripIntoDB,
   getAllTripsFromDB,
+  getSingleTripFromBD,
 };

@@ -8,12 +8,13 @@ import { UserRole } from "@prisma/client";
 const router = Router();
 
 router.post(
-  "/",
+  "/create",
   auth(UserRole.ADMIN, UserRole.USER),
   validateRequest(TripValidationSchema.createTripValidationSchema),
   TripControllers.createTrip
 );
 
 router.get("/", TripControllers.getAllTrips);
+router.get("/:id", TripControllers.getSingleTrip);
 
 export const TripRouters = router;

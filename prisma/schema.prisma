@@ -31,7 +31,8 @@ model UserProfile {
   name          String?
   contactNumber String
   occupation    String?
-  age           Int
+  age           Int?
+  gender        Gender
   image         String?
   address       String?
   bio           String?
@@ -95,4 +96,10 @@ enum UserRole {
 enum UserStatus {
   ACTIVE
   DEACTIVE
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
 }

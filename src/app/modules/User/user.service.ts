@@ -35,8 +35,8 @@ const createUserIntoDB = async (payload: TUserCreateData) => {
     await tx.userProfile.create({
       data: {
         userId: createdUser.id,
-        age: payload.profile.age,
         contactNumber: payload.profile.contactNumber,
+        gender: payload.profile.gender,
       },
     });
 
@@ -56,6 +56,8 @@ const getUserProfileFromDB = async (id: string) => {
       email: true,
       createdAt: true,
       updatedAt: true,
+      isDeleted: true,
+      userProfile: true,
     },
   });
   return result;

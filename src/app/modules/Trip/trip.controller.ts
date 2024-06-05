@@ -58,7 +58,22 @@ const getAllTrips = catchAsync(
     });
   }
 );
+
+const getSingleTrip = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const result = await TrapServices.getSingleTripFromBD(id);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "Trips retrieved successfully",
+      data: result,
+    });
+  }
+);
 export const TripControllers = {
   createTrip,
   getAllTrips,
+  getSingleTrip,
 };

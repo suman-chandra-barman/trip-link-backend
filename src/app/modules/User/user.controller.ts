@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserServices } from "./user.service";
 import sendResponse from "../../../shared/sendResponse";
 import catchAsync from "../../../shared/catchAsync";
+import { TAuthUser } from "../../interface/common";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const result = await UserServices.createUserIntoDB(req.body);
@@ -15,9 +16,9 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserProfile = catchAsync(
-  async (req: Request & { user?: any }, res: Response) => {
+  async (req: Request & { user?: TAuthUser }, res: Response) => {
     const id = req?.user?.id;
-    const result = await UserServices.getUserProfileFromDB(id);
+    const result = await UserServices.getUserProfileFromDB(id as string);
 
     sendResponse(res, {
       success: true,

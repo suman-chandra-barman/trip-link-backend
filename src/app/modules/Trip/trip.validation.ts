@@ -1,4 +1,4 @@
-import { number, z } from "zod";
+import { z } from "zod";
 
 const itinerarySchema = z.object({
   day: z.number({ required_error: "Day  is required" }),

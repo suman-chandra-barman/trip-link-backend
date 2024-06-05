@@ -1,3 +1,4 @@
+import { Gender } from "@prisma/client";
 import { z } from "zod";
 
 const createUserValidationSchema = z.object({
@@ -16,7 +17,9 @@ const createUserValidationSchema = z.object({
       contactNumber: z.string({
         required_error: "Contact Number is required",
       }),
-      age: z.number({ required_error: "Age  is required" }),
+      gender: z.enum([Gender.MALE, Gender.FEMALE, Gender.OTHER], {
+        required_error: "Gender is required",
+      }),
     }),
   }),
 });
