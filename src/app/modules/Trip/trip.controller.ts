@@ -72,8 +72,27 @@ const getSingleTrip = catchAsync(
     });
   }
 );
+
+const getMyTripPosts = catchAsync(
+  async (
+    req: Request & { user?: TAuthUser },
+    res: Response,
+    next: NextFunction
+  ) => {
+    const user = req.user;
+
+    const result = await TrapServices.getMyTripPosts(user as TAuthUser);
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "My trips post retrieved successfully",
+      data: result,
+    });
+  }
+);
 export const TripControllers = {
   createTrip,
   getAllTrips,
   getSingleTrip,
+  getMyTripPosts,
 };

@@ -101,7 +101,7 @@ const respondTravelBuddyRequest = async (
   return result;
 };
 
-const getUserTravelRequests = async (user: TAuthUser) => {
+const getMyTravelRequests = async (user: TAuthUser) => {
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found!");
   }
@@ -109,6 +109,14 @@ const getUserTravelRequests = async (user: TAuthUser) => {
   const result = await prisma.travelBuddyRequest.findMany({
     where: {
       userId: user?.id,
+    },
+    include: {
+      trip: {
+        select: {
+          destination: true,
+          travelType: true,
+        },
+      },
     },
   });
 
@@ -119,5 +127,5 @@ export const TravelBuddyRequestServices = {
   sendTravelBuddyRequest,
   getPotentialTravelBuddies,
   respondTravelBuddyRequest,
-  getUserTravelRequests,
+  getMyTravelRequests,
 };

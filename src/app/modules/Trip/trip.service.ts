@@ -151,8 +151,23 @@ const getSingleTripFromBD = async (id: string) => {
   return result;
 };
 
+const getMyTripPosts = async (user: TAuthUser) => {
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found!");
+  }
+
+  const result = await prisma.trip.findMany({
+    where: {
+      userId: user?.id,
+    },
+  });
+
+  return result;
+};
+
 export const TrapServices = {
   createTripIntoDB,
   getAllTripsFromDB,
   getSingleTripFromBD,
+  getMyTripPosts,
 };

@@ -15,6 +15,13 @@ router.post(
 );
 
 router.get("/", TripControllers.getAllTrips);
+
 router.get("/:id", TripControllers.getSingleTrip);
+
+router.get(
+  "/my/trip-post",
+  auth(UserRole.ADMIN, UserRole.USER),
+  TripControllers.getMyTripPosts
+);
 
 export const TripRouters = router;

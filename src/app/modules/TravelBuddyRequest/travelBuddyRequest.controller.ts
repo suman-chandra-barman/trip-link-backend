@@ -50,7 +50,7 @@ const respondTravelBuddyRequest = catchAsync(
     });
   }
 );
-const getUserTravelRequests = catchAsync(
+const getMyTravelRequests = catchAsync(
   async (
     req: Request & { user?: TAuthUser },
     res: Response,
@@ -58,13 +58,13 @@ const getUserTravelRequests = catchAsync(
   ) => {
     const user = req.user;
 
-    const result = await TravelBuddyRequestServices.getUserTravelRequests(
+    const result = await TravelBuddyRequestServices.getMyTravelRequests(
       user as TAuthUser
     );
     sendResponse(res, {
       success: true,
       statusCode: 200,
-      message: "User travel buddy request retrieved successfully",
+      message: "My travel buddy request retrieved successfully",
       data: result,
     });
   }
@@ -74,5 +74,5 @@ export const TravelBuddyRequestControllers = {
   sendTravelBuddyRequest,
   getPotentialTravelBuddies,
   respondTravelBuddyRequest,
-  getUserTravelRequests,
+  getMyTravelRequests,
 };

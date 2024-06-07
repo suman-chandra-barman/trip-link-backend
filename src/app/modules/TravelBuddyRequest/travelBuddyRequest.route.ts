@@ -23,9 +23,9 @@ router.get(
 );
 
 router.get(
-  "/user/travel-request",
+  "/my/travel-request",
   auth(UserRole.ADMIN, UserRole.USER),
-  TravelBuddyRequestControllers.getUserTravelRequests
+  TravelBuddyRequestControllers.getMyTravelRequests
 );
 
 router.put(
