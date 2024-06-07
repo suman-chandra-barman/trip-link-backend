@@ -90,9 +90,25 @@ const getMyTripPosts = catchAsync(
     });
   }
 );
+
+const deleteTrip = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const tripId = req.params.id;
+
+    const result = await TrapServices.deleteTrip(tripId);
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "Trip is deleted successfully",
+      data: result,
+    });
+  }
+);
+
 export const TripControllers = {
   createTrip,
   getAllTrips,
   getSingleTrip,
   getMyTripPosts,
+  deleteTrip,
 };

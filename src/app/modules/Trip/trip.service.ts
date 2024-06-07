@@ -165,9 +165,21 @@ const getMyTripPosts = async (user: TAuthUser) => {
   return result;
 };
 
+const deleteTrip = async (id: string) => {
+  console.log("id", id);
+  const result = await prisma.trip.delete({
+    where: {
+      id,
+    },
+  });
+
+  return result;
+};
+
 export const TrapServices = {
   createTripIntoDB,
   getAllTripsFromDB,
   getSingleTripFromBD,
   getMyTripPosts,
+  deleteTrip,
 };

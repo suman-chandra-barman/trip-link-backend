@@ -24,4 +24,6 @@ router.get(
   TripControllers.getMyTripPosts
 );
 
+router.delete("/:id", TripControllers.deleteTrip);
+
 export const TripRouters = router;
