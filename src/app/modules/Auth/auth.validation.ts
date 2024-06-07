@@ -8,13 +8,16 @@ const loginValidationSchema = z.object({
     password: z.string({ required_error: "Password  is required" }),
   }),
 });
+
 const changePasswordValidationSchema = z.object({
   body: z.object({
     currentPassword: z.string({
       required_error: "Current password  is required",
     }),
     newPassword: z
-      .string()
+      .string({
+        required_error: "New password  is required",
+      })
       .min(5, { message: "Password must be at least 5 characters long" }),
   }),
 });

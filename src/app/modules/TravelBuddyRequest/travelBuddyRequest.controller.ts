@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import catchAsync from "../../../shared/catchAsync";
 import { TravelBuddyRequestServices } from "./travelBuddyRequest.service";
 import sendResponse from "../../../shared/sendResponse";
+import { TAuthUser } from "../../interface/common";
 
 const sendTravelBuddyRequest = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -49,9 +50,29 @@ const respondTravelBuddyRequest = catchAsync(
     });
   }
 );
+const getUserTravelRequests = catchAsync(
+  async (
+    req: Request & { user?: TAuthUser },
+    res: Response,
+    next: NextFunction
+  ) => {
+    const user = req.user;
+
+    const result = await TravelBuddyRequestServices.getUserTravelRequests(
+      user as TAuthUser
+    );
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "User travel buddy request retrieved successfully",
+      data: result,
+    });
+  }
+);
 
 export const TravelBuddyRequestControllers = {
   sendTravelBuddyRequest,
   getPotentialTravelBuddies,
   respondTravelBuddyRequest,
+  getUserTravelRequests,
 };

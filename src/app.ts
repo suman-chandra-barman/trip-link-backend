@@ -8,8 +8,8 @@ import notFound from "./app/middlewares/notFound";
 const app: Application = express();
 
 //parsers
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
 //app routers
 app.use("/api/v1", Routes);
@@ -19,7 +19,7 @@ app.get("/", (req: Request, res: Response) => {
   res.status(httpStatus.OK).json({
     success: true,
     statuscode: 200,
-    message: "Welcome to Travel Buddy Matching Server",
+    message: "Welcome to Trip Link Server",
   });
 });
 

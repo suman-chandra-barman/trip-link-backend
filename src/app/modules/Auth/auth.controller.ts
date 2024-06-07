@@ -19,6 +19,7 @@ const login = catchAsync(
 const changePassword = catchAsync(
   async (req: Request & { user?: TAuthUser }, res: Response) => {
     const user = req.user;
+    console.log("body", req.body);
     const result = await AuthServices.changePassword(
       user as TAuthUser,
       req.body

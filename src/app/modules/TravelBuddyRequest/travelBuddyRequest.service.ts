@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import prisma from "../../../shared/prisma";
 import AppError from "../../errors/AppError";
 import { BuddyRequestStatus } from "@prisma/client";
+import { TAuthUser } from "../../interface/common";
 
 const sendTravelBuddyRequest = async (payload: {
   userId: string;
@@ -100,8 +101,23 @@ const respondTravelBuddyRequest = async (
   return result;
 };
 
+const getUserTravelRequests = async (user: TAuthUser) => {
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found!");
+  }
+
+  const result = await prisma.travelBuddyRequest.findMany({
+    where: {
+      userId: user?.id,
+    },
+  });
+
+  return result;
+};
+
 export const TravelBuddyRequestServices = {
   sendTravelBuddyRequest,
   getPotentialTravelBuddies,
   respondTravelBuddyRequest,
+  getUserTravelRequests,
 };

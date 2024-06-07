@@ -22,6 +22,12 @@ router.get(
   TravelBuddyRequestControllers.getPotentialTravelBuddies
 );
 
+router.get(
+  "/user/travel-request",
+  auth(UserRole.ADMIN, UserRole.USER),
+  TravelBuddyRequestControllers.getUserTravelRequests
+);
+
 router.put(
   "/:buddyId/respond",
   auth(UserRole.ADMIN, UserRole.USER),
