@@ -14,6 +14,11 @@ router.post(
 );
 
 router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.USER),
+  UserControllers.getAllUsers
+);
+router.get(
   "/me",
   auth(UserRole.ADMIN, UserRole.USER),
   UserControllers.getUserProfile

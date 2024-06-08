@@ -45,6 +45,26 @@ const createUserIntoDB = async (payload: TUserCreateData) => {
 
   return result;
 };
+
+const getAllUserFromDB = async () => {
+  const result = await prisma.user.findMany({
+    where: {
+      isDeleted: false,
+    },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      role: true,
+      status: true,
+      isDeleted: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+  return result;
+};
+
 const getUserProfileFromDB = async (id: string) => {
   const result = await prisma.user.findUniqueOrThrow({
     where: {
@@ -83,6 +103,7 @@ const updateUserProfileIntoDB = async (
 };
 export const UserServices = {
   createUserIntoDB,
+  getAllUserFromDB,
   getUserProfileFromDB,
   updateUserProfileIntoDB,
 };

@@ -15,6 +15,15 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.getAllUserFromDB();
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "All users retrieved successfully",
+    data: result,
+  });
+});
 const getUserProfile = catchAsync(
   async (req: Request & { user?: TAuthUser }, res: Response) => {
     const id = req?.user?.id;
@@ -45,6 +54,7 @@ const updateUserProfile = catchAsync(
 
 export const UserControllers = {
   createUser,
+  getAllUsers,
   getUserProfile,
   updateUserProfile,
 };
