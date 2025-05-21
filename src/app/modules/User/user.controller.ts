@@ -52,9 +52,21 @@ const updateUserProfile = catchAsync(
   }
 );
 
+const updateUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.updateUserIntoDB(req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "User updated successfully",
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getUserProfile,
+  updateUser,
   updateUserProfile,
 };

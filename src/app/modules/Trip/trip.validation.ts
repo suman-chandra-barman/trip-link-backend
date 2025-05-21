@@ -18,6 +18,20 @@ const createTripValidationSchema = z.object({
   }),
 });
 
+const updateTripValidationSchema = z.object({
+  body: z.object({
+    destination: z.string().optional(),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    description: z.string().optional(),
+    travelType: z.string().optional(),
+    photos: z.array(z.string()).optional(),
+    budget: z.number().optional(),
+    itinerary: z.array(itinerarySchema).optional(),
+  }),
+});
+
 export const TripValidationSchema = {
   createTripValidationSchema,
+  updateTripValidationSchema,
 };

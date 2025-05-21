@@ -31,4 +31,11 @@ router.put(
   UserControllers.updateUserProfile
 );
 
+router.put(
+  "/update-user",
+  auth(UserRole.ADMIN, UserRole.USER),
+  validateRequest(UserValidationSchema.updateUserValidationSchema),
+  UserControllers.updateUser
+);
+
 export const UserRouters = router;

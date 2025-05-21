@@ -24,10 +24,19 @@ const createUserValidationSchema = z.object({
   }),
 });
 
+const updateUserValidationSchema = z.object({
+  body: z.object({
+    userId: z.string(),
+    role: z.enum(["ADMIN", "USER"]).optional(),
+    status: z.enum(["ACTIVE", "DEACTIVE"]).optional(),
+    isDeleted: z.boolean().optional(),
+  }),
+});
+
 const updateUserProfileValidationSchema = z.object({
   body: z.object({
     username: z.string().optional(),
-    email: z.string().optional(),
+    email: z.string().email().optional(),
     image: z.string().optional(),
     address: z.string().optional(),
     bio: z.string().optional(),
@@ -36,5 +45,6 @@ const updateUserProfileValidationSchema = z.object({
 
 export const UserValidationSchema = {
   createUserValidationSchema,
+  updateUserValidationSchema,
   updateUserProfileValidationSchema,
 };

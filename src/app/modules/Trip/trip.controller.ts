@@ -91,11 +91,23 @@ const getMyTripPosts = catchAsync(
   }
 );
 
+const updateTrip = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const tripId = req.params.id;
+    const result = await TrapServices.updateTripIntoDB(tripId, req.body);
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "Trip updated successfully",
+      data: result,
+    });
+  }
+);
 const deleteTrip = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const tripId = req.params.id;
 
-    const result = await TrapServices.deleteTrip(tripId);
+    const result = await TrapServices.deleteTripFromDB(tripId);
     sendResponse(res, {
       success: true,
       statusCode: 200,
@@ -111,4 +123,5 @@ export const TripControllers = {
   getSingleTrip,
   getMyTripPosts,
   deleteTrip,
+  updateTrip,
 };

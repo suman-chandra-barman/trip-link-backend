@@ -23,15 +23,15 @@ const createTripIntoDB = async (user: TAuthUser, payload: TTrip) => {
 const getAllTripsFromDB = async (query: any, paginationOptions: any) => {
   const { searchTerm, travelDate, minBudget, maxBudget, ...filterData } = query;
 
-  const d = new Date(searchTerm);
+
 
   const { page, limit, skip, sortBy, sortOrder } =
     calculatePagination(paginationOptions);
 
   const andConditions: Prisma.TripWhereInput[] = [];
 
-  //if search trip by string  value
-  if (searchTerm && isNaN(d.getTime())) {
+  //searching
+  if (searchTerm) {
     andConditions.push({
       OR: [
         {
@@ -56,12 +56,12 @@ const getAllTripsFromDB = async (query: any, paginationOptions: any) => {
     });
   }
 
-  //if search by date
-  if (searchTerm && !isNaN(d.getTime())) {
+  //filter by date
+  if (travelDate) {
     andConditions.push({
       AND: [
-        { startDate: { lte: searchTerm } },
-        { endDate: { gte: searchTerm } },
+        { startDate: { lte: travelDate } },
+        { endDate: { gte: travelDate } },
       ],
     });
   }
@@ -77,7 +77,7 @@ const getAllTripsFromDB = async (query: any, paginationOptions: any) => {
     });
   }
 
-  // filter by budget range
+  //filter by budget range
   if (minBudget || maxBudget) {
     //if minBudget and maxBudget exists
     if (minBudget && maxBudget) {
@@ -113,6 +113,11 @@ const getAllTripsFromDB = async (query: any, paginationOptions: any) => {
     sortByField = "createdAt";
   }
 
+  //Check if isDeleted false
+  andConditions.push({
+    isDeleted: false,
+  });
+
   const whereConditions: Prisma.TripWhereInput = { AND: andConditions };
 
   //get all trips
@@ -122,6 +127,22 @@ const getAllTripsFromDB = async (query: any, paginationOptions: any) => {
     take: limit,
     orderBy: {
       [sortByField as string]: sortOrder,
+    },
+    select: {
+      id: true,
+      destination: true,
+      description: true,
+      budget: true,
+      travelType: true,
+      photos: true,
+      startDate: true,
+      endDate: true,
+      createdAt: true,
+      updatedAt: true,
+      user: true,
+      itinerary: true,
+      isDeleted: true,
+      travelBuddyRequests: true,
     },
   });
 
@@ -139,10 +160,12 @@ const getAllTripsFromDB = async (query: any, paginationOptions: any) => {
     data: result,
   };
 };
+
 const getSingleTripFromBD = async (id: string) => {
   const result = await prisma.trip.findUnique({
     where: {
       id,
+      isDeleted: false,
     },
   });
   if (!result) {
@@ -165,11 +188,41 @@ const getMyTripPosts = async (user: TAuthUser) => {
   return result;
 };
 
-const deleteTrip = async (id: string) => {
-  console.log("id", id);
-  const result = await prisma.trip.delete({
+const updateTripIntoDB = async (id: string, payload: TTrip) => {
+  const trip = await prisma.trip.findUnique({
     where: {
       id,
+    },
+  });
+  if (!trip) {
+    throw new AppError(httpStatus.NOT_FOUND, "Trip not fund");
+  }
+
+  const result = await prisma.trip.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+  return result;
+};
+
+const deleteTripFromDB = async (id: string) => {
+  // Check if the trip exists
+  const trip = await prisma.trip.findUnique({
+    where: { id },
+  });
+  if (!trip) {
+    throw new AppError(httpStatus.NOT_FOUND, "Trip not found");
+  }
+
+  // Soft delete trip
+  const result = await prisma.trip.update({
+    where: {
+      id,
+    },
+    data: {
+      isDeleted: true,
     },
   });
 
@@ -181,5 +234,6 @@ export const TrapServices = {
   getAllTripsFromDB,
   getSingleTripFromBD,
   getMyTripPosts,
-  deleteTrip,
+  deleteTripFromDB,
+  updateTripIntoDB,
 };

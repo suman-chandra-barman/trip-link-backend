@@ -8,18 +8,17 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  username  String     @unique
-  email     String     @unique
-  password  String
-  role      UserRole   @default(USER)
-  status    UserStatus @default(ACTIVE)
-  isDeleted Boolean    @default(false)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-
-  trips               Trip[]
+  id                  String               @id @default(uuid())
+  username            String               @unique
+  email               String               @unique
+  password            String
+  role                UserRole             @default(USER)
+  isDeleted           Boolean              @default(false)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  status              UserStatus           @default(ACTIVE)
   travelBuddyRequests TravelBuddyRequest[]
+  trips               Trip[]
   userProfile         UserProfile?
 
   @@map("users")
@@ -28,41 +27,38 @@ model User {
 model UserProfile {
   id            String   @id @default(uuid())
   userId        String   @unique
-  name          String?
   contactNumber String
-  occupation    String?
   age           Int?
-  gender        Gender
   image         String?
   address       String?
   bio           String?
-  isDeleted     Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
+  isDeleted     Boolean  @default(false)
+  name          String?
+  occupation    String?
+  gender        Gender
+  user          User     @relation(fields: [userId], references: [id])
 
   @@map("userProfiles")
 }
 
 model Trip {
-  id          String   @id @default(uuid())
-  userId      String
-  destination String
-  description String
-  startDate   DateTime
-  endDate     DateTime
-  travelType  String
-  photos      String[]
-  itinerary   Json
-  budget      Int
-  isDeleted   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  id                  String               @id @default(uuid())
+  userId              String
+  destination         String
+  description         String
+  startDate           DateTime
+  endDate             DateTime
+  travelType          String
+  photos              String[]
+  itinerary           Json
+  budget              Int
+  isDeleted           Boolean              @default(false)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
   travelBuddyRequests TravelBuddyRequest[]
-
-  user User @relation(fields: [userId], references: [id])
+  user                User                 @relation(fields: [userId], references: [id])
 
   @@map("trips")
 }
@@ -74,14 +70,12 @@ model TravelBuddyRequest {
   status    BuddyRequestStatus @default(PENDING)
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
-
-  trip Trip @relation(fields: [tripId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  trip      Trip               @relation(fields: [tripId], references: [id])
+  user      User               @relation(fields: [userId], references: [id])
 
   @@map("travelBuddyRequests")
 }
 
-// ----------- ENUMS ---------------
 enum BuddyRequestStatus {
   PENDING
   APPROVED
@@ -95,7 +89,7 @@ enum UserRole {
 
 enum UserStatus {
   ACTIVE
-  DEACTIVE
+  DEACTIVATED
 }
 
 enum Gender {

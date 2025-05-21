@@ -9,3 +9,10 @@ export type TUserCreateData = {
     gender: Gender;
   };
 };
+
+export type TUserUpdateData = {
+  userId: string;
+  role?: "ADMIN" | "USER";
+  status?: "ACTIVE" | "DEACTIVE";
+  isDeleted?: boolean;
+};

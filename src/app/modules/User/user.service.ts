@@ -1,7 +1,9 @@
 import bcrypt from "bcrypt";
 import config from "../../../config";
-import { TUserCreateData } from "./user.interface";
+import { TUserCreateData, TUserUpdateData } from "./user.interface";
 import prisma from "../../../shared/prisma";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 const createUserIntoDB = async (payload: TUserCreateData) => {
   //hashed password
@@ -82,6 +84,35 @@ const getUserProfileFromDB = async (id: string) => {
   });
   return result;
 };
+
+const updateUserIntoDB = async (payload: TUserUpdateData) => {
+  const { userId, ...updatedData } = payload;
+  const user = await prisma.user.findUnique({
+    where: {
+      id: payload.userId,
+    },
+  });
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not fund");
+  }
+
+  const result = await prisma.user.update({
+    where: {
+      id: payload.userId,
+    },
+    data: updatedData,
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      role: true,
+      status: true,
+      isDeleted: true,
+    },
+  });
+  return result;
+};
+
 const updateUserProfileIntoDB = async (
   id: string,
   payload: { username?: string; email?: string }
@@ -101,9 +132,11 @@ const updateUserProfileIntoDB = async (
   });
   return result;
 };
+
 export const UserServices = {
   createUserIntoDB,
   getAllUserFromDB,
   getUserProfileFromDB,
+  updateUserIntoDB,
   updateUserProfileIntoDB,
 };

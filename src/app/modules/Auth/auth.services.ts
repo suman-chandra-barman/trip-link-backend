@@ -80,7 +80,7 @@ const changePassword = async (
   );
 
   // update password in DB
-  await prisma.user.update({
+  const result = await prisma.user.update({
     where: {
       email: userData.email,
       status: "ACTIVE",
@@ -88,9 +88,14 @@ const changePassword = async (
     data: {
       password: hashedPassword,
     },
+    select: {
+      id: true,
+      username: true,
+      role: true,
+    },
   });
 
-  return null;
+  return result;
 };
 
 export const AuthServices = {

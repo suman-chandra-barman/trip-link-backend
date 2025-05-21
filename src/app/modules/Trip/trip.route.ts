@@ -24,6 +24,13 @@ router.get(
   TripControllers.getMyTripPosts
 );
 
+router.put(
+  "/:id",
+  auth(UserRole.ADMIN, UserRole.USER),
+  validateRequest(TripValidationSchema.updateTripValidationSchema),
+  TripControllers.updateTrip
+);
+
 router.delete("/:id", TripControllers.deleteTrip);
 
 export const TripRouters = router;
