@@ -19,7 +19,7 @@ app.get("/", (req: Request, res: Response) => {
   res.status(httpStatus.OK).json({
     success: true,
     statuscode: 200,
-    message: "Trip Link backend server is running...",
+    message: "Wellcome, Trip Link server is running...",
   });
 });
 
